@@ -1,0 +1,2 @@
+# Go Factory Method Generator
+
