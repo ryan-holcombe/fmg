@@ -6,14 +6,13 @@ import (
 )
 
 var (
-	directory = flag.String("dirname", "./", "starting directory to process")
-	file      = flag.String("file", "", "optional filename to process")
+	verbose bool
 )
 
 // to allow for testing
 var createGeneratedFileFunc = createGeneratedFile
 
-func run(directory, file string) {
+func run(directory string, recurse bool, file string) {
 	if file != "" {
 		parsed := parseFile(file)
 		if len(parsed.structs) > 0 {
@@ -22,7 +21,12 @@ func run(directory, file string) {
 			log.Fatalf("no structs found in file %s, aborting", file)
 		}
 	} else {
-		pkgs := parseAllDirs(directory)
+		var pkgs []genPackage
+		if recurse {
+			pkgs = parseAllDirs(directory)
+		} else {
+			pkgs = parseDir(directory)
+		}
 		for _, pkg := range pkgs {
 			if len(pkg.structs) > 0 {
 				createGeneratedFileFunc(pkg.dirname, pkg.pkg, pkg.imports, pkg.structs)
@@ -32,5 +36,10 @@ func run(directory, file string) {
 }
 
 func main() {
-	run(*directory, *file)
+	directory := flag.String("d", "./", "generate factory methods for all structs within the directory")
+	recurse := flag.Bool("r", true, "recursively generate factory methods for all packages")
+	file := flag.String("f", "", "generate factory methods only for file specific")
+	flag.BoolVar(&verbose, "v", false, "verbose output")
+	flag.Parse()
+	run(*directory, *recurse, *file)
 }

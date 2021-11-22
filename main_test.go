@@ -17,8 +17,17 @@ func TestRun(t *testing.T) {
 			assert.Equal(t, "testdata/", dirname)
 			executed = true
 		}
-		run("", "testdata/test.go")
+		run("", true,"testdata/test.go")
 		assert.True(t, executed)
+	})
+
+	t.Run("recurse directory", func(t *testing.T) {
+		var runCnt int
+		createGeneratedFileFunc = func(dirname, pkg string, imports []string, structs []genStruct) {
+			runCnt++
+		}
+		run("testdata/", true,"")
+		assert.Equal(t, 3, runCnt)
 	})
 
 	t.Run("directory", func(t *testing.T) {
@@ -26,7 +35,7 @@ func TestRun(t *testing.T) {
 		createGeneratedFileFunc = func(dirname, pkg string, imports []string, structs []genStruct) {
 			runCnt++
 		}
-		run("testdata/", "")
-		assert.Equal(t, 3, runCnt)
+		run("testdata/", false,"")
+		assert.Equal(t, 1, runCnt)
 	})
 }

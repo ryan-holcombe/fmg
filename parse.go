@@ -9,10 +9,6 @@ import (
 	"os"
 )
 
-const (
-	debug = true
-)
-
 func lineNum(fset *token.FileSet, pos token.Pos) int {
 	return fset.File(pos).Line(pos)
 }
@@ -113,7 +109,7 @@ func parseStructs(fset *token.FileSet, node *ast.File) []genStruct {
 		})
 	}
 
-	if debug {
+	if verbose {
 		logComments(os.Stdout, comments)
 	}
 
@@ -157,7 +153,7 @@ func parseStructs(fset *token.FileSet, node *ast.File) []genStruct {
 		}
 	}
 
-	if debug {
+	if verbose {
 		logStructs(os.Stdout, structs)
 	}
 
