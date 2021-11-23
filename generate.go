@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/pkg/errors"
-	"go/format"
 	"golang.org/x/tools/imports"
 	"io"
 	"log"
@@ -13,7 +12,7 @@ import (
 )
 
 func writeImports(w io.Writer, imports []string) {
-	if len(imports) == 0 {
+	if imports == nil || len(imports) == 0 {
 		return
 	}
 
@@ -31,12 +30,21 @@ func buildInputParams(fields []genField) string {
 	for _, f := range fields {
 		if f.skip {
 			continue
-		} else if f.optional {
-			fieldList = append(fieldList, fmt.Sprintf("%s *%s", f.name, f.typ))
-		} else if f.array {
-			fieldList = append(fieldList, fmt.Sprintf("%s []%s", f.name, f.typ))
+		}
+
+		var optionalStr string
+		if f.optional {
+			optionalStr = "*"
+		}
+
+		if f.array {
+			if f.ptr {
+				fieldList = append(fieldList, fmt.Sprintf("%s %s[]*%s", f.name, optionalStr, f.typ))
+			} else {
+				fieldList = append(fieldList, fmt.Sprintf("%s %s[]%s", f.name, optionalStr, f.typ))
+			}
 		} else {
-			fieldList = append(fieldList, fmt.Sprintf("%s %s", f.name, f.typ))
+			fieldList = append(fieldList, fmt.Sprintf("%s %s%s", f.name, optionalStr, f.typ))
 		}
 	}
 
@@ -119,15 +127,18 @@ func writePackageFile(w io.Writer, pkg string, pkgImports []string, structs []ge
 		}
 	}
 
-	formatted, err := format.Source(buf.Bytes())
-	if err != nil {
-		log.Panicf("unable to copy source to buffer - %v", errors.WithStack(err))
-	}
-
 	output := fmt.Sprintf("%s/%s", pkg, generatedFileName)
 	log.Printf("generating factory method file for package [%s]", pkg)
 
-	processed, err := imports.Process(output, formatted, nil)
+	opts := &imports.Options{
+		Fragment:   false,
+		AllErrors:  true,
+		Comments:   true,
+		TabIndent:  false,
+		TabWidth:   4,
+		FormatOnly: false,
+	}
+	processed, err := imports.Process(output, buf.Bytes(), opts)
 	if err != nil {
 		log.Panicf("unable to process generated file to remove unused imports - %v", errors.WithStack(err))
 	}

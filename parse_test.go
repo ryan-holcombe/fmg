@@ -165,6 +165,27 @@ func TestParseASTFile(t *testing.T) {
 		assert.Equal(t, expected, structs[0])
 	})
 
+	t.Run("array.go", func(t *testing.T) {
+		fset := token.NewFileSet()
+		astFile, err := parser.ParseFile(fset, "testdata/array.go", nil, parser.ParseComments)
+		assert.NoError(t, err)
+		structs := parseStructs(fset, astFile)
+		assert.Len(t, structs, 1)
+		expected := genStruct{
+			name:    "Array",
+			lineNum: 4,
+			fields: []genField{
+				{name: "String", typ: "string", array: true},
+				{name: "StringPtr", typ: "string", array: true, ptr: true},
+			},
+			comment: &genComment{
+				lineNum: 3,
+				value:   "Array struct to help test arrays\n",
+			},
+		}
+		assert.Equal(t, expected, structs[0])
+	})
+
 	t.Run("interface.go", func(t *testing.T) {
 		fset := token.NewFileSet()
 		astFile, err := parser.ParseFile(fset, "testdata/interface.go", nil, parser.ParseComments)
@@ -303,5 +324,28 @@ Name time.Time
 		assert.Equal(t, "time.Time", result.typ)
 		assert.False(t, result.ptr)
 		assert.False(t, result.array)
+	})
+}
+
+func TestWriteImports(t *testing.T) {
+	t.Run("empty", func(t *testing.T) {
+		var buf bytes.Buffer
+		writeImports(&buf, nil)
+		assert.Empty(t, buf.Bytes())
+		writeImports(&buf, []string{})
+		assert.Empty(t, buf.Bytes())
+	})
+
+	t.Run("empty", func(t *testing.T) {
+		var buf bytes.Buffer
+		imports := []string{`"net/url"`, `"time.Time"`}
+		writeImports(&buf, imports)
+
+		expected := `import (
+"net/url"
+"time.Time"
+)
+`
+		assert.Equal(t, expected, buf.String())
 	})
 }

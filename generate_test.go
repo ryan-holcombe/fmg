@@ -74,7 +74,7 @@ func NewSample(Name string, Age *int64, LastUpdated *time.Time) *Sample {
 func TestBuildInputParams(t *testing.T) {
 	fields := []genField{
 		{
-			name:     "A",
+			name:     "String",
 			typ:      "string",
 			optional: false,
 			skip:     false,
@@ -82,7 +82,7 @@ func TestBuildInputParams(t *testing.T) {
 			array:    false,
 		},
 		{
-			name:     "B",
+			name:     "TimeOptional",
 			typ:      "time.Time",
 			optional: true,
 			skip:     false,
@@ -90,7 +90,23 @@ func TestBuildInputParams(t *testing.T) {
 			array:    false,
 		},
 		{
-			name:     "C",
+			name:     "TimePtr",
+			typ:      "time.Time",
+			optional: false,
+			skip:     false,
+			ptr:      true,
+			array:    false,
+		},
+		{
+			name:     "TimePtrOptional",
+			typ:      "time.Time",
+			optional: true,
+			skip:     false,
+			ptr:      true,
+			array:    false,
+		},
+		{
+			name:     "Skip",
 			typ:      "int64",
 			optional: false,
 			skip:     true,
@@ -98,16 +114,32 @@ func TestBuildInputParams(t *testing.T) {
 			array:    false,
 		},
 		{
-			name:     "D",
+			name:     "Array",
 			typ:      "int64",
 			optional: false,
 			skip:     false,
 			ptr:      false,
 			array:    true,
 		},
+		{
+			name:     "ArrayPtr",
+			typ:      "int64",
+			optional: false,
+			skip:     false,
+			ptr:      true,
+			array:    true,
+		},
+		{
+			name:     "ArrayPtrOptional",
+			typ:      "int64",
+			optional: true,
+			skip:     false,
+			ptr:      true,
+			array:    true,
+		},
 	}
 	result := buildInputParams(fields)
-	expected := `A string,B *time.Time,D []int64`
+	expected := `String string,TimeOptional *time.Time,TimePtr time.Time,TimePtrOptional *time.Time,Array []int64,ArrayPtr []*int64,ArrayPtrOptional *[]*int64`
 	assert.Equal(t, expected, result)
 }
 
@@ -134,6 +166,35 @@ func TestBuildBody(t *testing.T) {
 				optional: false,
 				skip:     true,
 				ptr:      false,
+			},
+		}
+		result := buildBody("Simple", fields)
+		expected := `result := &Simple {
+A: A,
+B: &B,
+}
+return result
+`
+		assert.Equal(t, expected, result)
+	})
+
+	t.Run("arrays", func(t *testing.T) {
+		fields := []genField{
+			{
+				name:     "A",
+				typ:      "string",
+				array:    true,
+				optional: false,
+				skip:     false,
+				ptr:      false,
+			},
+			{
+				name:     "B",
+				typ:      "int64",
+				array:    true,
+				optional: false,
+				skip:     false,
+				ptr:      true,
 			},
 		}
 		result := buildBody("Simple", fields)

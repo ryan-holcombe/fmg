@@ -97,6 +97,6 @@ func createGeneratedFile(dirname, pkg string, imports []string, structs []genStr
 	var data bytes.Buffer
 	writePackageFile(&data, pkg, imports, structs)
 	if err := os.WriteFile(fmt.Sprintf("%s/%s", dirname, generatedFileName), data.Bytes(), 0644); err != nil {
-		log.Panicf("unable to write fm_gen.go file to %s - %v", dirname, err)
+		log.Panicf("unable to write %s file to %s - %v", generatedFileName, dirname, err)
 	}
 }
