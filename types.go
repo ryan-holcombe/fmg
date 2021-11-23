@@ -5,8 +5,8 @@ import (
 	"strings"
 )
 
-const (
-	skipStructComment = "fmgen:exclude"
+var (
+	skipStructComment = []string{"fmgen:-", "fmgen:skip", "fmgen:exclude"}
 )
 
 type genField struct {
@@ -35,7 +35,13 @@ func (g genStruct) Skip() bool {
 		return false
 	}
 
-	return strings.Contains(strings.ToLower(g.comment.value), skipStructComment)
+	for _, c := range skipStructComment {
+		if strings.Contains(strings.ToLower(g.comment.value), c) {
+			return true
+		}
+	}
+
+	return false
 }
 
 type genPackage struct {

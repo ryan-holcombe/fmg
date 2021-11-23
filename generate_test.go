@@ -36,7 +36,7 @@ func TestWritePackageFile(t *testing.T) {
 			},
 			comment: &genComment{
 				lineNum: 11,
-				value:   "Sample simple struct fmgen:exclude\n",
+				value:   "Sample simple struct fmgen:-\n",
 			},
 		},
 	}

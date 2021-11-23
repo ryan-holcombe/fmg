@@ -6,12 +6,36 @@ import (
 )
 
 func TestGenStruct(t *testing.T) {
-	t.Run("skip struct based on comment", func(t *testing.T) {
+	t.Run("skip struct based on comment fmgen:-", func(t *testing.T) {
+		s := genStruct{
+			lineNum: 9,
+			comment: &genComment{
+				lineNum: 8,
+				value:   "Simple struct fmgen:-",
+			},
+		}
+
+		assert.True(t, s.Skip())
+	})
+
+	t.Run("skip struct based on comment fmgen:exclude", func(t *testing.T) {
 		s := genStruct{
 			lineNum: 9,
 			comment: &genComment{
 				lineNum: 8,
 				value:   "Simple struct fmgen:exclude",
+			},
+		}
+
+		assert.True(t, s.Skip())
+	})
+
+	t.Run("skip struct based on comment fmgen:skip", func(t *testing.T) {
+		s := genStruct{
+			lineNum: 9,
+			comment: &genComment{
+				lineNum: 8,
+				value:   "Simple struct fmgen:skip",
 			},
 		}
 
