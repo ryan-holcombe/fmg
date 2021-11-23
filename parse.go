@@ -51,10 +51,24 @@ func logStructs(w io.Writer, structs []genStruct) {
 	}
 }
 
+func logImports(w io.Writer, imports []string) {
+	if len(imports) > 0 {
+		fmt.Fprintln(w, "Imports")
+		fmt.Fprintln(w, "----------------------------------------------------")
+		for _, i := range imports {
+			fmt.Fprintf(w, "    %s\n", i)
+		}
+	}
+}
+
 func parseImports(node *ast.File) []string {
 	imports := make([]string, 0)
 	for _, i := range node.Imports {
 		imports = append(imports, i.Path.Value)
+	}
+
+	if verbose {
+		logImports(os.Stdout, imports)
 	}
 
 	return imports

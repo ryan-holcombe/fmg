@@ -114,6 +114,24 @@ Struct:
 	assert.Equal(t, expected, w.String())
 }
 
+func TestLogImports(t *testing.T) {
+	w := &bytes.Buffer{}
+	imports := []string{
+		`"github.com/gin-gonic/gin"`,
+		`"github.com/pkg/errors"`,
+	}
+
+	logImports(w, imports)
+
+	expected := `Imports
+----------------------------------------------------
+    "github.com/gin-gonic/gin"
+    "github.com/pkg/errors"
+`
+
+	assert.Equal(t, expected, w.String())
+}
+
 func TestParseASTFile(t *testing.T) {
 	t.Run("simple.go", func(t *testing.T) {
 		fset := token.NewFileSet()
