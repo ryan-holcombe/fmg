@@ -156,7 +156,7 @@ func writePackageFile(w io.Writer, pkg string, pkgImports []string, structs []ge
 
 	// process imports twice due to issues noticed with imports not being removed
 	processed := buf.Bytes()
-	for i:=0; i<2; i++ {
+	for i := 0; i < 2; i++ {
 		processed, err = imports.Process(output, processed, opts)
 		if err != nil {
 			log.Panicf("unable to process generated file to remove unused imports - %v", errors.WithStack(err))
