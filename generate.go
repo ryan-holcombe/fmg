@@ -7,6 +7,7 @@ import (
 	"golang.org/x/tools/imports"
 	"io"
 	"log"
+	"sort"
 	"strings"
 	"unicode"
 )
@@ -25,8 +26,21 @@ func writeImports(w io.Writer, imports []string) {
 	fmt.Fprintln(w, ")")
 }
 
+func bool2int(b bool) int {
+	if b {
+		return 1
+	}
+	return 0
+}
+
 func buildInputParams(fields []genField) string {
 	var fieldList []string
+
+	// sort fields, required first
+	sort.SliceStable(fields, func(i, j int) bool {
+		return bool2int(fields[i].optional) < bool2int(fields[j].optional)
+	})
+
 	for _, f := range fields {
 		if f.skip {
 			continue
