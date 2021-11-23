@@ -11,7 +11,7 @@ func TestGenStruct(t *testing.T) {
 			lineNum: 9,
 			comment: &genComment{
 				lineNum: 8,
-				value:   "Simple struct fmgen:skip",
+				value:   "Simple struct fmgen:exclude",
 			},
 		}
 

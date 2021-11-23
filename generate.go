@@ -114,7 +114,9 @@ func writePackageFile(w io.Writer, pkg string, pkgImports []string, structs []ge
 
 	// write factory methods for each struct
 	for _, s := range structs {
-		writeStruct(&buf, s)
+		if !s.Skip() {
+			writeStruct(&buf, s)
+		}
 	}
 
 	formatted, err := format.Source(buf.Bytes())

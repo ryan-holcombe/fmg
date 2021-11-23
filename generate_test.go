@@ -28,6 +28,17 @@ func TestWritePackageFile(t *testing.T) {
 				value:   "Sample simple struct fmgen:omit\n",
 			},
 		},
+		{
+			name:    "Skip",
+			lineNum: 12,
+			fields: []genField{
+				{name: "ID", typ: "int64", optional: false, skip: false},
+			},
+			comment: &genComment{
+				lineNum: 11,
+				value:   "Sample simple struct fmgen:exclude\n",
+			},
+		},
 	}
 	imports := []string{
 		`"time"`,

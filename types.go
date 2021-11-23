@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	skipStructComment = "fmgen:skip"
+	skipStructComment = "fmgen:exclude"
 )
 
 type genField struct {
