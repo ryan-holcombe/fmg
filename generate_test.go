@@ -139,7 +139,7 @@ func TestBuildInputParams(t *testing.T) {
 		},
 	}
 	result := buildInputParams(fields)
-	expected := `String string,TimePtr time.Time,Array []int64,ArrayPtr []*int64,TimeOptional *time.Time,TimePtrOptional *time.Time,ArrayPtrOptional *[]*int64`
+	expected := `String string,TimePtr time.Time,Array []int64,ArrayPtr []*int64,TimeOptional *time.Time,TimePtrOptional *time.Time,ArrayPtrOptional []*int64`
 	assert.Equal(t, expected, result)
 }
 
@@ -200,7 +200,7 @@ return result
 		result := buildBody("Simple", fields)
 		expected := `result := &Simple {
 A: A,
-B: &B,
+B: B,
 }
 return result
 `

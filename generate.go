@@ -47,7 +47,7 @@ func buildInputParams(fields []genField) string {
 		}
 
 		var optionalStr string
-		if f.optional {
+		if f.optional && !f.array {
 			optionalStr = "*"
 		}
 
@@ -75,8 +75,8 @@ func buildBody(name string, fields []genField) string {
 			continue
 		}
 
-		// if field is required and a pointer, then set to the address of the input param
-		if f.ptr {
+		// if field is required, not an array, and a pointer, then set to the address of the input param
+		if f.ptr && !f.array {
 			sb.WriteString(fmt.Sprintf("%s: &%s,\n", f.name, f.name))
 		} else {
 			sb.WriteString(fmt.Sprintf("%s: %s,\n", f.name, f.name))

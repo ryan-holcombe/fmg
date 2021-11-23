@@ -195,6 +195,7 @@ func TestParseASTFile(t *testing.T) {
 			fields: []genField{
 				{name: "String", typ: "string", array: true},
 				{name: "StringPtr", typ: "string", array: true, ptr: true},
+				{name: "StringOptionalPtr", typ: "string", array: true, ptr: true, optional: true},
 			},
 			comment: &genComment{
 				lineNum: 3,
