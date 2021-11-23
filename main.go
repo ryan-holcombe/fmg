@@ -5,7 +5,10 @@ import (
 )
 
 var (
-	verbose bool
+	directory = flag.String("d", "./", "generate factory methods for all structs within the directory")
+	recurse   = flag.Bool("r", true, "recursively generate factory methods for all packages")
+	file      = flag.String("f", "", "generate factory methods only for file specific")
+	verbose   = flag.Bool("v", false, "verbose output")
 )
 
 // to allow for testing
@@ -29,10 +32,6 @@ func run(directory string, recurse bool, file string) {
 }
 
 func main() {
-	directory := flag.String("d", "./", "generate factory methods for all structs within the directory")
-	recurse := flag.Bool("r", true, "recursively generate factory methods for all packages")
-	file := flag.String("f", "", "generate factory methods only for file specific")
-	flag.BoolVar(&verbose, "v", false, "verbose output")
 	flag.Parse()
 	run(*directory, *recurse, *file)
 }
