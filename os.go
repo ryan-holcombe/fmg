@@ -45,8 +45,9 @@ func parseAllDirs(dir string) []genPackage {
 func parseDir(dir string) []genPackage {
 	fset := token.NewFileSet()
 	pkgs, err := parser.ParseDir(fset, dir, func(info fs.FileInfo) bool {
-		// skip test files
-		return !strings.HasSuffix(info.Name(), "test.go")
+		// skip fm_gen.go and *test.go files
+		filename := info.Name()
+		return filename != generatedFileName && !strings.HasSuffix(filename, "test.go")
 	}, parser.ParseComments)
 	if err != nil {
 		log.Panicf("unable to parse directory [%s] - %v", dir, errors.WithStack(err))
