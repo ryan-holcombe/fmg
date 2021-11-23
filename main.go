@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"log"
 )
 
 var (
@@ -15,11 +14,7 @@ var createGeneratedFileFunc = createGeneratedFile
 func run(directory string, recurse bool, file string) {
 	if file != "" {
 		parsed := parseFile(file)
-		if len(parsed.structs) > 0 {
-			createGeneratedFileFunc(parsed.dirname, parsed.pkg, parsed.imports, parsed.structs)
-		} else {
-			log.Fatalf("no structs found in file %s, aborting", file)
-		}
+		createGeneratedFileFunc(parsed.dirname, parsed.pkg, parsed.imports, parsed.structs)
 	} else {
 		var pkgs []genPackage
 		if recurse {
@@ -28,9 +23,7 @@ func run(directory string, recurse bool, file string) {
 			pkgs = parseDir(directory)
 		}
 		for _, pkg := range pkgs {
-			if len(pkg.structs) > 0 {
-				createGeneratedFileFunc(pkg.dirname, pkg.pkg, pkg.imports, pkg.structs)
-			}
+			createGeneratedFileFunc(pkg.dirname, pkg.pkg, pkg.imports, pkg.structs)
 		}
 	}
 }

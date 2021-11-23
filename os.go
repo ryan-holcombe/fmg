@@ -95,8 +95,18 @@ func parseFile(filename string) genFile {
 
 func createGeneratedFile(dirname, pkg string, imports []string, structs []genStruct) {
 	var data bytes.Buffer
-	writePackageFile(&data, pkg, imports, structs)
-	if err := os.WriteFile(fmt.Sprintf("%s/%s", dirname, generatedFileName), data.Bytes(), 0644); err != nil {
-		log.Panicf("unable to write %s file to %s - %v", generatedFileName, dirname, err)
+	var writableStructs []genStruct
+
+	// filter out any structs that should be skipped
+	for _, s := range structs {
+		if !s.Skip() {
+			writableStructs = append(writableStructs, s)
+		}
+	}
+	if len(writableStructs) > 0 {
+		writePackageFile(&data, pkg, imports, writableStructs)
+		if err := os.WriteFile(fmt.Sprintf("%s/%s", dirname, generatedFileName), data.Bytes(), 0644); err != nil {
+			log.Panicf("unable to write %s file to %s - %v", generatedFileName, dirname, err)
+		}
 	}
 }
