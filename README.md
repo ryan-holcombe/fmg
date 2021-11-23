@@ -9,10 +9,10 @@ A Go factory method generator. Parses all packages to find all `struct` signatur
 ```
 // Sample demo struct
 type Sample struct {
-	ID          int64 `fmgen:"-"`
-	Name        string
-	Age         int64 `fmgen:"optional"`
-	LastUpdated time.Time
+    ID          int64 `fmgen:"-"`
+    Name        string
+    Age         int64 `fmgen:"optional"`
+    LastUpdated time.Time
 }
 ```
 
@@ -20,13 +20,47 @@ type Sample struct {
 ```
 // NewSample generated factory method for Sample
 func NewSample(Name string, LastUpdated time.Time, Age *int64) *Sample {
-	result := &Sample{
-		Name:        Name,
-		LastUpdated: LastUpdated,
-	}
-	if Age != nil {
-		result.Age = *Age
-	}
-	return result
+    result := &Sample{
+        Name:        Name,
+        LastUpdated: LastUpdated,
+    }
+    if Age != nil {
+        result.Age = *Age
+    }
+    return result
+}
+```
+
+### Flags
+`-d` will specify the directory to parse (defaults to ./)
+
+`-r` recursively process directories (defaults to true)
+
+`-f` overrides `-d`, will process a single file instead
+
+`-v` verbose mode, will include additional logging
+
+### Options
+Adding `fmgen:-` to a struct comment will exclude that struct from generation
+```
+// Sample demo struct, fmgen:-
+type Sample struct {
+    ...
+}
+```
+
+Adding `fmgen:-` to a struct field will omit that field
+```
+type Sample struct {
+    ID int64 `fmgen:"-"`
+    ...
+}
+```
+
+Adding `fmgen:optional` to a struct field will allow a `nil` to be passed in. A `nil` will be skipped when creating the struct
+```
+type Sample struct {
+    ID int64 `fmgen:"optional"`
+    ...
 }
 ```
