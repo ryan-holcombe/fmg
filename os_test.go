@@ -33,7 +33,7 @@ func TestParseAllDirs(t *testing.T) {
 	})
 }
 
-func TestParseDir(t *testing.T)  {
+func TestParseDir(t *testing.T) {
 	parseStructsFunc = func(fset *token.FileSet, node *ast.File) []genStruct {
 		return nil
 	}
@@ -48,7 +48,7 @@ func TestParseDir(t *testing.T)  {
 	})
 
 	t.Run("skip test files", func(t *testing.T) {
-		results :=  parseDir("./testdata")
+		results := parseDir("./testdata")
 		assert.Len(t, results, 1)
 		for _, s := range results[0].structs {
 			assert.NotEqual(t, "ShouldSkip", s.name)
@@ -56,7 +56,7 @@ func TestParseDir(t *testing.T)  {
 	})
 
 	t.Run("parse testdata dirname", func(t *testing.T) {
-		results :=  parseDir("./testdata")
+		results := parseDir("./testdata")
 		assert.Len(t, results, 1)
 		assert.Equal(t, "testdata", results[0].pkg)
 		assert.Equal(t, "./testdata", results[0].dirname)

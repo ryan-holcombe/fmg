@@ -17,7 +17,7 @@ func TestRun(t *testing.T) {
 			assert.Equal(t, "testdata/", dirname)
 			executed = true
 		}
-		run("", true,"testdata/simple.go")
+		run("", true, "testdata/simple.go")
 		assert.True(t, executed)
 	})
 
@@ -26,7 +26,7 @@ func TestRun(t *testing.T) {
 		createGeneratedFileFunc = func(dirname, pkg string, imports []string, structs []genStruct) {
 			runCnt++
 		}
-		run("testdata/", true,"")
+		run("testdata/", true, "")
 		assert.Equal(t, 3, runCnt)
 	})
 
@@ -35,7 +35,7 @@ func TestRun(t *testing.T) {
 		createGeneratedFileFunc = func(dirname, pkg string, imports []string, structs []genStruct) {
 			runCnt++
 		}
-		run("testdata/", false,"")
+		run("testdata/", false, "")
 		assert.Equal(t, 1, runCnt)
 	})
 }
