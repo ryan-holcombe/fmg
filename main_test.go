@@ -17,7 +17,7 @@ func TestRun(t *testing.T) {
 			assert.Equal(t, "testdata/", dirname)
 			executed = true
 		}
-		run("", true,"testdata/test.go")
+		run("", true,"testdata/simple.go")
 		assert.True(t, executed)
 	})
 

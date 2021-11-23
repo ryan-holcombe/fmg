@@ -6,10 +6,12 @@ import (
 	"github.com/pkg/errors"
 	"go/parser"
 	"go/token"
+	"io/fs"
 	"io/ioutil"
 	"log"
 	"os"
 	"path"
+	"strings"
 )
 
 const (
@@ -42,7 +44,10 @@ func parseAllDirs(dir string) []genPackage {
 
 func parseDir(dir string) []genPackage {
 	fset := token.NewFileSet()
-	pkgs, err := parser.ParseDir(fset, dir, nil, parser.ParseComments)
+	pkgs, err := parser.ParseDir(fset, dir, func(info fs.FileInfo) bool {
+		// skip test files
+		return !strings.HasSuffix(info.Name(), "test.go")
+	}, parser.ParseComments)
 	if err != nil {
 		log.Panicf("unable to parse directory [%s] - %v", dir, errors.WithStack(err))
 	}

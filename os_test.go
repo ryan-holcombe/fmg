@@ -47,6 +47,14 @@ func TestParseDir(t *testing.T)  {
 		})
 	})
 
+	t.Run("skip test files", func(t *testing.T) {
+		results :=  parseDir("./testdata")
+		assert.Len(t, results, 1)
+		for _, s := range results[0].structs {
+			assert.NotEqual(t, "ShouldSkip", s.name)
+		}
+	})
+
 	t.Run("parse testdata dirname", func(t *testing.T) {
 		results :=  parseDir("./testdata")
 		assert.Len(t, results, 1)
@@ -69,9 +77,9 @@ func TestParseFile(t *testing.T) {
 		})
 	})
 
-	t.Run("parse testdata/test.go file", func(t *testing.T) {
-		results := parseFile("testdata/test.go")
-		assert.Equal(t, "test.go", results.filename)
+	t.Run("parse testdata/simple.go file", func(t *testing.T) {
+		results := parseFile("testdata/simple.go")
+		assert.Equal(t, "simple.go", results.filename)
 		assert.Equal(t, "testdata/", results.dirname)
 		assert.Equal(t, "testdata", results.pkg)
 	})

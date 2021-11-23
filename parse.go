@@ -116,11 +116,11 @@ func parseStructs(fset *token.FileSet, node *ast.File) []genStruct {
 	var structs []genStruct
 
 	// look for structs and within the file, parse out the fields and tags into a genStruct
-	for _, node := range node.Decls {
-		switch node.(type) {
+	for _, decl := range node.Decls {
+		switch decl.(type) {
 
 		case *ast.GenDecl:
-			genDecl := node.(*ast.GenDecl)
+			genDecl := decl.(*ast.GenDecl)
 			for _, spec := range genDecl.Specs {
 				switch spec.(type) {
 				case *ast.TypeSpec:
@@ -137,17 +137,15 @@ func parseStructs(fset *token.FileSet, node *ast.File) []genStruct {
 							fieldStruct := buildField(nil, field.Type, parseFieldName(field), field.Tag)
 							structFields = append(structFields, *fieldStruct)
 						}
+						structs = append(structs, genStruct{
+							name:    structName,
+							lineNum: structLineNum,
+							fields:  structFields,
+							comment: findComment(structLineNum, comments),
+						})
 					default:
-						log.Printf("skipping spec type - %v\n", typeSpec.Type)
+						log.Printf("skipping spec type in [%s], struct [%s] - %v\n", node.Name.Name, structName, typeSpec.Type)
 					}
-
-					structs = append(structs, genStruct{
-						name:    structName,
-						lineNum: structLineNum,
-						fields:  structFields,
-						comment: findComment(structLineNum, comments),
-					})
-
 				}
 			}
 		}

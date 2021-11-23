@@ -115,9 +115,9 @@ Struct:
 }
 
 func TestParseASTFile(t *testing.T) {
-	t.Run("test.go", func(t *testing.T) {
+	t.Run("simple.go", func(t *testing.T) {
 		fset := token.NewFileSet()
-		astFile, err := parser.ParseFile(fset, "testdata/test.go", nil, parser.ParseComments)
+		astFile, err := parser.ParseFile(fset, "testdata/simple.go", nil, parser.ParseComments)
 		assert.NoError(t, err)
 		structs := parseStructs(fset, astFile)
 		assert.Len(t, structs, 2)
@@ -160,6 +160,22 @@ func TestParseASTFile(t *testing.T) {
 			comment: &genComment{
 				lineNum: 5,
 				value:   "Pointer struct to help test pointers\n",
+			},
+		}
+		assert.Equal(t, expected, structs[0])
+	})
+
+	t.Run("interface.go", func(t *testing.T) {
+		fset := token.NewFileSet()
+		astFile, err := parser.ParseFile(fset, "testdata/interface.go", nil, parser.ParseComments)
+		assert.NoError(t, err)
+		structs := parseStructs(fset, astFile)
+		assert.Len(t, structs, 1)
+		expected := genStruct{
+			name:    "impl",
+			lineNum: 7,
+			fields: []genField{
+				{name: "i", typ: "iface", optional: false, skip: false},
 			},
 		}
 		assert.Equal(t, expected, structs[0])
