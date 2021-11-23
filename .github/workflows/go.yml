@@ -24,3 +24,9 @@ jobs:
     - name: Test
       run: go test -v -coverprofile=coverage.out ./...
 
+    - name: Upload coverage to codecov
+      uses: codecov/codecov-action@v2
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./coverage.out
+        verbose: true
