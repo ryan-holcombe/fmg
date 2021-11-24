@@ -67,7 +67,7 @@ func parseImports(node *ast.File) []string {
 		imports = append(imports, i.Path.Value)
 	}
 
-	if *verbose {
+	if *flagVerbose {
 		logImports(os.Stdout, imports)
 	}
 
@@ -123,7 +123,7 @@ func parseStructs(fset *token.FileSet, node *ast.File) []genStruct {
 		})
 	}
 
-	if *verbose {
+	if *flagVerbose {
 		logComments(os.Stdout, comments)
 	}
 
@@ -165,7 +165,7 @@ func parseStructs(fset *token.FileSet, node *ast.File) []genStruct {
 		}
 	}
 
-	if *verbose {
+	if *flagVerbose {
 		logStructs(os.Stdout, structs)
 	}
 

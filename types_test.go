@@ -62,4 +62,22 @@ func TestGenStruct(t *testing.T) {
 
 		assert.False(t, s.Skip())
 	})
+
+	t.Run("not in struct includes", func(t *testing.T) {
+		*flagStructs = "struct2,struct3"
+		s := genStruct{
+			name: "struct1",
+		}
+
+		assert.True(t, s.Skip())
+	})
+
+	t.Run("in struct includes", func(t *testing.T) {
+		*flagStructs = "struct1,struct2,struct3"
+		s := genStruct{
+			name: "struct1",
+		}
+
+		assert.False(t, s.Skip())
+	})
 }

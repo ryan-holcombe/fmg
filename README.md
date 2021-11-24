@@ -38,7 +38,15 @@ func NewSample(Name string, LastUpdated time.Time, Age *int64) *Sample {
 
 `-f` overrides `-d`, will process a single file instead
 
+`-s` comma separated list of structs to include. all others will be ignored
+
 `-v` verbose mode, will include additional logging
+
+### Example
+This will search the directory recursively and only process `Struct1`
+```
+fmgen -d ./pkg -s Struct1
+```
 
 ### Options
 Adding `fmgen:-` to a struct comment will exclude that struct from generation

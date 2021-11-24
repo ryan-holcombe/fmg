@@ -31,17 +31,30 @@ type genStruct struct {
 }
 
 func (g genStruct) Skip() bool {
-	if g.comment == nil {
-		return false
-	}
 
-	for _, c := range skipStructComment {
-		if strings.Contains(strings.ToLower(g.comment.value), c) {
-			return true
+	// check comment for skip directive
+	if g.comment != nil {
+		for _, c := range skipStructComment {
+			if strings.Contains(strings.ToLower(g.comment.value), c) {
+				return true
+			}
 		}
 	}
 
-	return false
+	// check flags for struct includes
+	if *flagStructs == "" {
+		return false
+	}
+
+	skip := true
+	structSplit := strings.Split(*flagStructs, ",")
+	for _, s := range structSplit {
+		if strings.TrimSpace(s) == g.name {
+			skip = false
+		}
+	}
+
+	return skip
 }
 
 type genPackage struct {
@@ -59,4 +72,28 @@ type genFile struct {
 	fset     *token.FileSet
 	structs  []genStruct
 	imports  []string
+}
+
+type structIncludes struct {
+	structs map[string]struct{}
+}
+
+func NewStructIncludes(structStr string) *structIncludes {
+	// create a map of the structs to include flag
+	splitStructs := strings.Split(structStr, ",")
+	structMap := make(map[string]struct{}, len(splitStructs))
+	for _, s := range splitStructs {
+		structMap[strings.TrimSpace(s)] = struct{}{}
+	}
+	return &structIncludes{structMap}
+}
+
+func (s structIncludes) Skip(structName string) bool {
+	// if no structs are passed in, assume all structs should be included
+	if len(s.structs) == 0 {
+		return false
+	}
+
+	_, ok := s.structs[structName]
+	return ok
 }
