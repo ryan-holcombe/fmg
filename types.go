@@ -73,27 +73,3 @@ type genFile struct {
 	structs  []genStruct
 	imports  []string
 }
-
-type structIncludes struct {
-	structs map[string]struct{}
-}
-
-func NewStructIncludes(structStr string) *structIncludes {
-	// create a map of the structs to include flag
-	splitStructs := strings.Split(structStr, ",")
-	structMap := make(map[string]struct{}, len(splitStructs))
-	for _, s := range splitStructs {
-		structMap[strings.TrimSpace(s)] = struct{}{}
-	}
-	return &structIncludes{structMap}
-}
-
-func (s structIncludes) Skip(structName string) bool {
-	// if no structs are passed in, assume all structs should be included
-	if len(s.structs) == 0 {
-		return false
-	}
-
-	_, ok := s.structs[structName]
-	return ok
-}
