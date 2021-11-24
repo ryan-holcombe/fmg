@@ -5,7 +5,7 @@
 
 A Go factory method generator. Parses all packages to find all `struct` signatures. Then generates a `fm_gen.go` file for each package.
 
-### Example
+### Source
 ```
 // Sample demo struct
 type Sample struct {
@@ -31,7 +31,7 @@ func NewSample(Name string, LastUpdated time.Time, Age *int64) *Sample {
 }
 ```
 
-### Flags
+### Usage lags
 `-d` will specify the directory to parse (defaults to ./)
 
 `-r` recursively process directories (defaults to true)
@@ -42,7 +42,7 @@ func NewSample(Name string, LastUpdated time.Time, Age *int64) *Sample {
 
 `-v` verbose mode, will include additional logging
 
-### Example
+### Example Usage
 This will search the directory recursively and only process `Struct1`
 ```
 fmgen -d ./pkg -s Struct1
