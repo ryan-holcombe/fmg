@@ -31,7 +31,7 @@ func NewSample(Name string, LastUpdated time.Time, Age *int64) *Sample {
 }
 ```
 
-### Usage lags
+### Usage Flags
 `-d` will specify the directory to parse (defaults to ./)
 
 `-r` recursively process directories (defaults to true)
